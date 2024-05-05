@@ -1,41 +1,49 @@
-#include<stdio.h>
+#include <stdio.h>
 
-void quicksort(int a[], int first, int last) {
-    int i, j, pivot, temp;
-    if (first < last) {
-        pivot = first;
-        i = first;
-        j = last;
-        while (i < j) {
-            while (a[i] <= a[pivot] && i < last)
-                i++;
-            while (a[j] > a[pivot])
-                j--;
-            if (i < j) {
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
+void swap(int *a, int *b) {
+  int t = *a;
+  *a = *b;
+  *b = t;
+}
+
+int partition(int array[], int low, int high) {
+    int pivot = array[high];
+    int i = (low - 1);
+    int j;
+    for (j = low; j < high; j++) {
+        if (array[j] <= pivot) {
+            i++;
+            swap(&array[i], &array[j]);
         }
-        temp = a[pivot];
-        a[pivot] = a[j];
-        a[j] = temp;
-        quicksort(a, first, j - 1);
-        quicksort(a, j + 1, last);
     }
+    swap(&array[i + 1], &array[high]);
+    return (i + 1);
+}
+
+void quickSort(int array[], int low, int high) {
+    if (low < high) {
+        int pi = partition(array, low, high);
+        quickSort(array, low, pi - 1);
+        quickSort(array, pi + 1, high);
+    }
+}
+
+void printArray(int array[], int size) {
+    int i;
+    for (i = 0; i < size; ++i) {
+        printf("%d  ", array[i]);
+    }
+    printf("\n");
 }
 
 int main() {
-    int a[40], n, i;
-    printf("Enter size of array: ");
-    scanf("%d", &n);
-    printf("Enter elements: ");
-    for (i = 0; i < n; i++) {
-        scanf("%d", &a[i]);
-    }
-    quicksort(a, 0, n - 1);
-    printf("Sorted elements are: ");
-    for (i = 0; i < n; i++)
-        printf("%d ", a[i]);
+    int data[] = {8, 7, 2, 1, 0, 9, 6};
+    int n = sizeof(data) / sizeof(data[0]);
+    printf("Unsorted Array\n");
+    printArray(data, n);
+    quickSort(data, 0, n - 1);
+    printf("Sorted array in ascending order: \n");
+    printArray(data, n);
     return 0;
 }
+
